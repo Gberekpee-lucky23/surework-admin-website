@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-blue-50: #eff1fc;
+  --color-blue-100: #e0e4f7;
+  --color-blue-200: #c6cdef;
+  --color-blue-300: #9daae4;
+  --color-blue-400: #6d7fd5;
+  --color-blue-500: #495cc5;
+  --color-blue-600: #34409a; /* Brand color */
+  --color-blue-700: #2a337d; /* Darker brand hover */
+  --color-blue-800: #202762;
+  --color-blue-900: #171d4a;
+  --color-blue-950: #0f1231;
+}
+
+@layer base {
+  :root {
+    --color-sidebar: #0f172a;
+    --color-sidebar-hover: #1e293b;
+    --color-sidebar-active: #34409a;
+    --color-accent: #34409a;
+    --color-accent-hover: #34409a;
+  }
+
+  /*pupil - #34409a */
+  /*blue alt- #1d4ed8 */
+  /* color Accent #2563eb  */
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    height: 100%;
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 2px;
+  }
+}
