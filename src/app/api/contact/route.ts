@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { contactSubmissions } from "@/db/schema";
 import nodemailer from "nodemailer";
@@ -131,7 +132,7 @@ export async function POST(request: Request) {
     await db
       .update(contactSubmissions)
       .set({ emailSent, emailError })
-      .where((t: any) => t.id === submission.id);
+      .where(eq(contactSubmissions.id, submission.id));
   } catch {
     // Non-fatal — submission is already saved
   }
