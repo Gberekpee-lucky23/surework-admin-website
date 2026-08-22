@@ -6,6 +6,6 @@ import { COOKIE_NAME } from "@/lib/session";
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
   cookieStore.delete(COOKIE_NAME);
-  const loginUrl = new URL("/login", request.url);
+  const loginUrl = new URL("https://surework.ng/");
   return NextResponse.redirect(loginUrl);
 }
