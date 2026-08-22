@@ -1,9 +1,11 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { COOKIE_NAME } from "@/lib/session";
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
   cookieStore.delete(COOKIE_NAME);
-  return NextResponse.redirect(new URL("/login", process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"));
+  const loginUrl = new URL("/login", request.url);
+  return NextResponse.redirect(loginUrl);
 }
