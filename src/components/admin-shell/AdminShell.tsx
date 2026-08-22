@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Sidebar } from "@/components/sidebar/Sidebar";
-import { Menu, Wrench } from "lucide-react";
+import { Menu } from "lucide-react";
 
 interface AdminShellProps {
   adminName: string;
@@ -36,10 +36,11 @@ export function AdminShell({ adminName, pendingCount, children }: AdminShellProp
               <Menu size={20} />
             </button>
             <div className="flex items-center gap-2 md:hidden">
-              <div className="w-7 h-7 bg-blue-600 rounded flex items-center justify-center">
-                <Wrench size={14} className="text-white" />
-              </div>
-              <span className="font-bold text-sm text-slate-900">Surework</span>
+              <img
+                src="/images/surework-logo.png"
+                alt="Surework"
+                className="h-7 w-auto object-contain"
+              />
             </div>
           </div>
 
