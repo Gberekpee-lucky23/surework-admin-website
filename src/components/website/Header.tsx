@@ -106,8 +106,9 @@ export function Header() {
               />
             </a>
             <a
-              href="/downloads/surework.apk"
-              download
+              href="https://github.com/Gberekpee-lucky23/surework-android/releases/download/v1.0.0/Surework.v1.0.0.apk"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:scale-[1.03] active:scale-95 transition-transform"
               aria-label="Download Android APK"
             >
