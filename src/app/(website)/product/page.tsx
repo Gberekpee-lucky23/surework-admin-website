@@ -314,7 +314,7 @@ export default function ProductPage() {
               </a>
 
               <a
-                href="https://github.com/Gberekpee-lucky23/surework-android/releases/download/v1.0.0/Surework.v1.0.0.apk"
+                href="https://github.com/Gberekpee-lucky23/surework-admin-website/releases/download/v1.0.0/Surework.v1.0.0.apk"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex hover:scale-[1.03] active:scale-95 transition-transform"
