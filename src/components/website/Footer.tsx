@@ -173,12 +173,12 @@ export function Footer() {
         <div className={`pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4 text-xs ${
           isDark ? "border-slate-900 text-slate-500" : "border-slate-200 text-slate-500"
         }`}>
-          <p>&copy; {new Date().getFullYear()} Port Harcourt Handyman Services. All rights reserved.</p>
-          <div className="flex items-center gap-6 font-medium">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 font-medium">
             <Link href="/contact" className="hover:underline">Support</Link>
             <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
             <Link href="/terms" className="hover:underline">Terms of Service</Link>
-            {/* <Link href="/admin" className="hover:underline text-slate-400 dark:text-slate-600">Admin Portal</Link> */}
+            <Link href="/customer-terms" className="hover:underline">Customer Terms</Link>
+            <Link href="/handyman-terms" className="hover:underline">Handyman Agreement</Link>
           </div>
         </div>
 

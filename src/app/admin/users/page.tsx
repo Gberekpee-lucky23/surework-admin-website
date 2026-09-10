@@ -10,6 +10,7 @@ const FILTERS: { label: string; value: string }[] = [
   { label: "All Users", value: "all" },
   { label: "Customers", value: "customer" },
   { label: "Handymen", value: "handyman" },
+  { label: "Pending Verification", value: "pending_verification" },
   { label: "Suspended", value: "suspended" },
 ];
 

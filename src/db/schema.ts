@@ -1,10 +1,10 @@
 import {
   pgTable, serial, text, varchar, timestamp,
-  integer, jsonb, pgEnum, boolean, numeric,
+  integer, jsonb, pgEnum, boolean, numeric, unique,
 } from "drizzle-orm/pg-core";
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
-export const accountStatusEnum = pgEnum("account_status", ["active", "suspended"]);
+export const accountStatusEnum = pgEnum("account_status", ["pending_verification", "active", "suspended"]);
 export const applicationStatusEnum = pgEnum("application_status", ["pending", "approved", "rejected"]);
 export const categoryGroupEnum = pgEnum("category_group", ["inspection_required", "fixed_price"]);
 
@@ -19,7 +19,7 @@ export const users = pgTable("users", {
   state: varchar("state", { length: 100 }),
   city: varchar("city", { length: 100 }),
   address: text("address"),
-  accountStatus: accountStatusEnum("account_status").default("active").notNull(),
+  accountStatus: accountStatusEnum("account_status").default("pending_verification").notNull(),
   fcmToken: text("fcm_token"),
   lastLogin: timestamp("last_login"),
   lastDevice: text("last_device"),
@@ -395,5 +395,51 @@ export const contactSubmissions = pgTable("contact_submissions", {
   emailError: text("email_error"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// ─── Legal Documents & Policies ───────────────────────────────────────────────
+export const legalDocuments = pgTable("legal_documents", {
+  id: serial("id").primaryKey(),
+  documentType: varchar("document_type", { length: 50 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  version: integer("version").notNull(),
+  content: text("content").notNull(),
+  changelog: text("changelog"),
+  status: varchar("status", { length: 20 }).default("draft").notNull(), // draft | published | archived
+  publishedAt: timestamp("published_at"),
+  publishedBy: integer("published_by").references(() => adminUsers.id),
+  createdBy: integer("created_by").references(() => adminUsers.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  unique("legal_documents_type_version_unique").on(table.documentType, table.version),
+]);
+
+// ─── User Terms Acceptances ───────────────────────────────────────────────────
+export const userTermsAcceptances = pgTable("user_terms_acceptances", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  documentType: varchar("document_type", { length: 50 }).notNull(),
+  version: integer("version").notNull(),
+  acceptedAt: timestamp("accepted_at").defaultNow().notNull(),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+}, (table) => [
+  unique("user_terms_acceptances_user_type_ver_unique").on(table.userId, table.documentType, table.version),
+]);
+
+// ─── Email Jobs (Batch / Background Processing) ────────────────────────────────
+export const emailJobs = pgTable("email_jobs", {
+  id: serial("id").primaryKey(),
+  jobType: varchar("job_type", { length: 50 }).notNull(),
+  payload: jsonb("payload").notNull(),
+  status: varchar("status", { length: 20 }).default("pending").notNull(), // pending | processing | completed | failed
+  attempts: integer("attempts").default(0).notNull(),
+  maxAttempts: integer("max_attempts").default(3).notNull(),
+  errorMessage: text("error_message"),
+  processedAt: timestamp("processed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 
 

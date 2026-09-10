@@ -7,6 +7,7 @@ type BadgeVariant =
   | "rejected"
   | "active"
   | "suspended"
+  | "pending_verification"
   // Job statuses — old
   | "requested"
   | "accepted"
@@ -34,6 +35,7 @@ const variantMap: Record<BadgeVariant, string> = {
   rejected:                       "bg-red-100 text-red-800 border border-red-200",
   active:                         "bg-green-100 text-green-800 border border-green-200",
   suspended:                      "bg-red-100 text-red-800 border border-red-200",
+  pending_verification:           "bg-orange-100 text-orange-800 border border-orange-200",
   requested:                      "bg-slate-100 text-slate-700 border border-slate-200",
   accepted:                       "bg-blue-100 text-blue-800 border border-blue-200",
   on_the_way:                     "bg-indigo-100 text-indigo-800 border border-indigo-200",
@@ -61,6 +63,7 @@ const labelMap: Record<string, string> = {
   pending:                        "Pending",
   active:                         "Active",
   suspended:                      "Suspended",
+  pending_verification:           "Pending Verification",
   requested:                      "Requested",
   accepted:                       "Accepted",
   started:                        "Started",
@@ -83,6 +86,7 @@ const dotColorMap: Record<string, string> = {
   pending:                        "bg-amber-500",
   approved:                       "bg-green-500",
   active:                         "bg-green-500",
+  pending_verification:           "bg-orange-500",
   completed:                      "bg-green-500",
   confirmed:                      "bg-green-500",
   payout_released:                "bg-teal-500",

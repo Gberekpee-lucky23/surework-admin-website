@@ -127,7 +127,9 @@ export async function getCommunicationAnalytics() {
 
 export async function triggerNotificationRetry(logId: number) {
   try {
-    const res = await fetch(`http://localhost:8080/api/admin/communications/retry/${logId}`, {
+    // BUG 5 FIX: read backend URL from env var; fallback to production domain (never localhost)
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.surework.ng";
+    const res = await fetch(`${backendUrl}/api/admin/communications/retry/${logId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -20,6 +20,7 @@ import {
   AlertTriangle,
   Settings,
   MessageSquare,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +35,7 @@ const navItems = [
   { href: "/admin/reviews", label: "Reviews", icon: Star },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/communications", label: "Communications", icon: MessageSquare },
+  { href: "/admin/legal", label: "Legal Documents", icon: FileText },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

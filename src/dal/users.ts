@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { users, handymanProfiles, jobs } from "@/db/schema";
 import { eq, desc, and, count, or, ilike, sql } from "drizzle-orm";
 
-export type UserFilter = "all" | "customer" | "handyman" | "suspended";
+export type UserFilter = "all" | "customer" | "handyman" | "suspended" | "pending_verification";
 
 export async function getUsers(filter: UserFilter = "all", page = 1, limit = 20, search = "") {
   const offset = (page - 1) * limit;
@@ -10,6 +10,9 @@ export async function getUsers(filter: UserFilter = "all", page = 1, limit = 20,
   const conditions = [];
   if (filter === "suspended") {
     conditions.push(eq(users.accountStatus, "suspended"));
+  }
+  if (filter === "pending_verification") {
+    conditions.push(eq(users.accountStatus, "pending_verification"));
   }
   if (search) {
     conditions.push(
@@ -57,7 +60,7 @@ export async function getUsers(filter: UserFilter = "all", page = 1, limit = 20,
 
   return {
     users: filtered,
-    total: filter === "all" || filter === "suspended" ? Number(total) : filtered.length,
+    total: (filter === "all" || filter === "suspended" || filter === "pending_verification") ? Number(total) : filtered.length,
     page,
     limit,
     totalPages: Math.ceil(Number(total) / limit),
