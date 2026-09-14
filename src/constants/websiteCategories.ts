@@ -8,9 +8,9 @@ export function getCategoryImage(idOrSlug: string): string {
   if (normalized.includes("mason") || normalized.includes("civil")) return "/images/masons.png";
   if (normalized.includes("paint")) return "/images/painter.jpg";
   if (normalized.includes("clean") || normalized.includes("janitor")) return "/images/com-cleaning.jpg";
-  if (normalized.includes("hvac") || normalized.includes("ac") || normalized.includes("air")) return "/images/ac-repair.jpg";
-  if (normalized.includes("fumi") || normalized.includes("pest")) return "/images/fumigation.jpg";
   if (normalized.includes("hair")) return "/images/hair.png";
+  if (normalized.includes("hvac") || normalized.includes("ac") || normalized.includes("air-cond") || normalized.includes("air cond")) return "/images/ac-repair.jpg";
+  if (normalized.includes("fumi") || normalized.includes("pest")) return "/images/fumigation.jpg";
   if (normalized.includes("makeup")) return "/images/makeup.jpg";
   if (normalized.includes("nail")) return "/images/nail-tech.jpg";
   if (normalized.includes("scaffold")) return "/images/scaffolder.jpg";
