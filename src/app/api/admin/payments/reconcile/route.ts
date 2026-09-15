@@ -24,11 +24,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Call backend authoritative reconcilePayment endpoint
+    // Uses a shared internal secret for server-to-server auth (no user JWT needed)
+    const adminSecret = process.env.ADMIN_INTERNAL_SECRET;
+    if (!adminSecret) {
+      return NextResponse.json({ error: "Admin internal secret not configured" }, { status: 500 });
+    }
+
     const res = await fetch(`${BACKEND_URL}/api/payments/admin/reconcile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-admin-request": "true",
+        "x-admin-secret": adminSecret,
       },
       body: JSON.stringify({
         reference,

@@ -186,56 +186,59 @@ export default async function PaymentsPage({
                 <p className="text-xs text-slate-400 mt-1">All payments have settled normally or are within the 15-minute grace period.</p>
               </div>
             ) : (
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/60">
-                    {["Job", "Customer", "Amount", "Gateway Reference", "Pending Duration", "Created", "Action"].map((h) => (
-                      <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {stuckPayments.map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-50">
-                      <td className="px-4 py-3">
-                        <Link href={`/admin/jobs/${p.jobId}`} className="text-blue-600 hover:text-blue-700 font-medium">
-                          #{p.jobId}
-                        </Link>
-                        {p.jobDescription && <p className="text-xs text-slate-500 truncate max-w-[140px]">{p.jobDescription}</p>}
-                      </td>
-                      <td className="px-4 py-3">
-                        <p className="font-medium text-slate-900">{p.customerName ?? "—"}</p>
-                        <p className="text-xs text-slate-400">{p.customerEmail}</p>
-                      </td>
-                      <td className="px-4 py-3 font-semibold text-slate-900">{formatNGN(p.amount)}</td>
-                      <td className="px-4 py-3">
-                        <span className="font-mono text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
-                          {p.gatewayReference}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200/60 px-2 py-1 rounded-md">
-                          {formatRelativeTime(p.createdAt)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-slate-500">
-                        {formatDate(p.createdAt)}
-                      </td>
-                      <td className="px-4 py-3">
-                        <StuckPaymentActionsClient
-                          paymentId={p.id}
-                          reference={p.gatewayReference}
-                          jobId={p.jobId}
-                          amount={p.amount}
-                          customerName={p.customerName}
-                        />
-                      </td>
+              <div className="overflow-auto max-h-[600px]">
+                <table className="w-full text-sm min-w-[900px]">
+                  <thead className="sticky top-0 z-10">
+                    <tr className="border-b border-slate-100 bg-slate-50/95 backdrop-blur-sm">
+                      {["Job", "Customer", "Amount", "Gateway Reference", "Pending Duration", "Created", "Action"].map((h) => (
+                        <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {stuckPayments.map((p) => (
+                      <tr key={p.id} className="hover:bg-slate-50">
+                        <td className="px-4 py-3">
+                          <Link href={`/admin/jobs/${p.jobId}`} className="text-blue-600 hover:text-blue-700 font-medium">
+                            #{p.jobId}
+                          </Link>
+                          {p.jobDescription && <p className="text-xs text-slate-500 truncate max-w-[140px]">{p.jobDescription}</p>}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <p className="font-medium text-slate-900">{p.customerName ?? "—"}</p>
+                          <p className="text-xs text-slate-400">{p.customerEmail}</p>
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-slate-900 whitespace-nowrap">{formatNGN(p.amount)}</td>
+                        <td className="px-4 py-3">
+                          <span className="font-mono text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded select-all">
+                            {p.gatewayReference}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200/60 px-2 py-1 rounded-md">
+                            {formatRelativeTime(p.createdAt)}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">
+                          {formatDate(p.createdAt)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <StuckPaymentActionsClient
+                            paymentId={p.id}
+                            reference={p.gatewayReference}
+                            jobId={p.jobId}
+                            amount={p.amount}
+                            customerName={p.customerName}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
+
         </div>
       )}
 
