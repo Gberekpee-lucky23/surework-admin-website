@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/components/website/ThemeProvider";
 import { SectionHeading } from "@/components/website/SectionHeading";
+import { APP_LINKS } from "@/constants/appLinks";
 
 // Interactive App Screens Data
 const APP_SCREENS = [
@@ -297,7 +298,7 @@ export default function ProductPage() {
             {/* App Store Buttons */}
             <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-2">
               <a
-                href="https://play.google.com/store"
+                href={APP_LINKS.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex hover:scale-[1.03] active:scale-95 transition-transform"
@@ -314,7 +315,7 @@ export default function ProductPage() {
               </a>
 
               <a
-                href="https://github.com/Gberekpee-lucky23/surework-admin-website/releases/download/v1.0.0/Surework.v1.0.0.apk"
+                href={APP_LINKS.apk}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex hover:scale-[1.03] active:scale-95 transition-transform"

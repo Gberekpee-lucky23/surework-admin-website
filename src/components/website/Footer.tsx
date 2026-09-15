@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import { APP_LINKS } from "@/constants/appLinks";
 
 export function Footer() {
   const { isDark } = useTheme();
@@ -45,7 +46,7 @@ export function Footer() {
 
             <div className="flex items-center gap-3 pt-1">
               <a
-                href="https://play.google.com/store"
+                href={APP_LINKS.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:scale-[1.03] active:scale-95 transition-transform"
@@ -60,7 +61,7 @@ export function Footer() {
                 />
               </a>
               <a
-                href="https://github.com/Gberekpee-lucky23/surework-admin-website/releases/download/v1.0.0/Surework.v1.0.0.apk"
+                href={APP_LINKS.apk}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:scale-[1.03] active:scale-95 transition-transform"

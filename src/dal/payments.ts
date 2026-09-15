@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { payments, payouts, payoutRequests, handymanBankDetails, handymanCashLedger, users, jobs, jobQuotes } from "@/db/schema";
-import { eq, desc, and, sum, count } from "drizzle-orm";
+import { eq, desc, and, sum, count, lte } from "drizzle-orm";
 
 export async function getAllPayments(page = 1, limit = 25) {
   const offset = (page - 1) * limit;
@@ -117,4 +117,34 @@ export async function getPaymentsSummary() {
     // Legacy field kept for backward compat
     totalCommissionEarned: totalLabourCommission + totalServiceFees,
   };
+}
+
+/**
+ * Fetch payments stuck in 'pending' status older than thresholdMinutes (default 15 mins).
+ * Surfaces transactions where automatic webhook or redirect reconciliation may have failed.
+ */
+export async function getStuckPayments(thresholdMinutes = 15) {
+  const cutoff = new Date(Date.now() - thresholdMinutes * 60 * 1000);
+  return db
+    .select({
+      id: payments.id,
+      jobId: payments.jobId,
+      amount: payments.amount,
+      gateway: payments.gateway,
+      gatewayReference: payments.gatewayReference,
+      gatewayFee: payments.gatewayFee,
+      status: payments.status,
+      paymentMethod: payments.paymentMethod,
+      createdAt: payments.createdAt,
+      customerId: payments.customerId,
+      customerName: users.name,
+      customerEmail: users.email,
+      jobDescription: jobs.description,
+      jobStatus: jobs.status,
+    })
+    .from(payments)
+    .leftJoin(users, eq(payments.customerId, users.id))
+    .leftJoin(jobs, eq(payments.jobId, jobs.id))
+    .where(and(eq(payments.status, "pending"), lte(payments.createdAt, cutoff)))
+    .orderBy(desc(payments.createdAt));
 }

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Sun, Moon, Menu, X, Smartphone, ArrowRight } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import { APP_LINKS } from "@/constants/appLinks";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -91,7 +92,7 @@ export function Header() {
           {/* Download Store Badges */}
           <div className="hidden lg:flex items-center gap-2">
             <a
-              href="https://play.google.com/store"
+              href={APP_LINKS.playStore}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:scale-[1.03] active:scale-95 transition-transform"
@@ -106,7 +107,7 @@ export function Header() {
               />
             </a>
             <a
-              href="https://github.com/Gberekpee-lucky23/surework-admin-website/releases/download/v1.0.0/Surework.v1.0.0.apk"
+              href={APP_LINKS.apk}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:scale-[1.03] active:scale-95 transition-transform"

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { getAllPayments, getAllPayoutRequests, getCashLedger, getPaymentsSummary } from "@/dal/payments";
+import { getAllPayments, getAllPayoutRequests, getCashLedger, getPaymentsSummary, getStuckPayments } from "@/dal/payments";
 import { formatRelativeTime, formatDate } from "@/lib/utils";
-import { CreditCard, Wallet, AlertCircle, DollarSign, TrendingUp, Percent } from "lucide-react";
+import { CreditCard, Wallet, AlertCircle, DollarSign, TrendingUp, Percent, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { PayoutActionsClient } from "./PayoutActionsClient";
+import { StuckPaymentActionsClient } from "./StuckPaymentActionsClient";
 
 export const metadata = { title: "Payments & Payouts — Surework Admin" };
 
@@ -33,18 +34,25 @@ export default async function PaymentsPage({
   searchParams: Promise<Record<string, string>>;
 }) {
   const params = await searchParams;
-  const tab = (params.tab as "payments" | "payouts" | "ledger") ?? "payments";
+  const tab = (params.tab as "payments" | "stuck" | "payouts" | "ledger") ?? "payments";
   const page = Number(params.page ?? 1);
 
-  const [paymentsData, payoutsData, ledger, summary] = await Promise.all([
+  const [paymentsData, payoutsData, ledger, summary, stuckPayments] = await Promise.all([
     getAllPayments(page),
     getAllPayoutRequests(page),
     getCashLedger(),
     getPaymentsSummary(),
+    getStuckPayments(15),
   ]);
 
   const tabs = [
     { value: "payments", label: "Payments", icon: CreditCard },
+    {
+      value: "stuck",
+      label: stuckPayments.length > 0 ? `Stuck Payments (${stuckPayments.length})` : "Stuck Payments",
+      icon: AlertTriangle,
+      badge: stuckPayments.length > 0 ? stuckPayments.length : null,
+    },
     { value: "payouts", label: "Payouts", icon: Wallet },
     { value: "ledger", label: "Cash Ledger", icon: AlertCircle },
   ];
@@ -150,6 +158,84 @@ export default async function PaymentsPage({
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Stuck Payments Tab (Safety Net) */}
+      {tab === "stuck" && (
+        <div className="space-y-4">
+          <div className="p-4 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-start gap-3">
+            <div className="p-2 bg-amber-100 text-amber-700 rounded-xl flex-shrink-0 mt-0.5">
+              <AlertTriangle size={18} />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-sm font-bold text-amber-900">Safety Net: Unreconciled Pending Transactions</h3>
+              <p className="text-xs text-amber-800 leading-relaxed">
+                These payments have been sitting at <span className="font-semibold">pending</span> for more than 15 minutes.
+                They may represent cases where the customer paid on Paystack but closed their browser/app before the redirect completed,
+                or where the automated webhook failed to deliver. Use <strong>Verify with Paystack</strong> to query live status and advance the job safely.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            {stuckPayments.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+                <CheckCircle2 size={44} className="text-emerald-500 mb-2 opacity-80" />
+                <p className="font-semibold text-slate-700 text-base">No Stuck Payments</p>
+                <p className="text-xs text-slate-400 mt-1">All payments have settled normally or are within the 15-minute grace period.</p>
+              </div>
+            ) : (
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/60">
+                    {["Job", "Customer", "Amount", "Gateway Reference", "Pending Duration", "Created", "Action"].map((h) => (
+                      <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {stuckPayments.map((p) => (
+                    <tr key={p.id} className="hover:bg-slate-50">
+                      <td className="px-4 py-3">
+                        <Link href={`/admin/jobs/${p.jobId}`} className="text-blue-600 hover:text-blue-700 font-medium">
+                          #{p.jobId}
+                        </Link>
+                        {p.jobDescription && <p className="text-xs text-slate-500 truncate max-w-[140px]">{p.jobDescription}</p>}
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-slate-900">{p.customerName ?? "—"}</p>
+                        <p className="text-xs text-slate-400">{p.customerEmail}</p>
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-slate-900">{formatNGN(p.amount)}</td>
+                      <td className="px-4 py-3">
+                        <span className="font-mono text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
+                          {p.gatewayReference}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200/60 px-2 py-1 rounded-md">
+                          {formatRelativeTime(p.createdAt)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-slate-500">
+                        {formatDate(p.createdAt)}
+                      </td>
+                      <td className="px-4 py-3">
+                        <StuckPaymentActionsClient
+                          paymentId={p.id}
+                          reference={p.gatewayReference}
+                          jobId={p.jobId}
+                          amount={p.amount}
+                          customerName={p.customerName}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       )}
 
